@@ -1,12 +1,14 @@
 # Telegram-To-Discord
-Mirrors all messages from telegram and translates them if not in English to and sends them to the webhook with all the media. Only works for photos and videos not longer than 60 seconds (imgur limit) in which case it displays a link to the message in Telegram.
+Mirrors all messages from Telegram and translates them if they are not English and sends them to the webhook with all the media. Only works for photos and videos not longer than 60 seconds (imgur limit) in which case it displays a link to the message in Telegram.
 
 # How to run
 ```py
-Downloadn the repo and extract to an empty folder
-Open a CLI ex. CMD,PS,GitBash in the directory
+#Download the repo and extract to an empty folder
+#Open a CLI ex. CMD,PS,GitBash in the directory
 pip3 install -r requirements.txt
+#Rename example.env to .env
 #Edit info in .env
+#APPID and HASH are created here https://core.telegram.org/api/obtaining_api_id
 python3 main.py
 ```
 # Example
