@@ -1,4 +1,5 @@
 from telethon import TelegramClient, events
+import telethon
 import aiohttp
 import nextcord
 from langdetect import detect
@@ -50,6 +51,8 @@ def start():
     print(f'Blacklist: {blacklist}')
     @client.on(events.NewMessage(chats=input_channels_entities, blacklist_chats=blacklist))
     async def handler(event):
+        if (type(event.chat)==telethon.tl.types.User):
+          return #Ignore Messages from Users or Bots
         msg = event.message.message
         # Try to detect the language and translate the message if it's not english
         try: 
@@ -70,10 +73,10 @@ def start():
               return
             else: # Duration less than 60s send media
               path = await event.message.download_media(dlloc)
-              if event.message.file.size > 209715201:
-                await pic(path,msg,event.chat.title)
-              else:
+              if event.message.file.size > 8388608: # If file size is greater than 8MB use Imgur
                 await picimgur(path,msg,event.chat.title)
+              else:
+                await pic(path,msg,event.chat.title)
               os.remove(path)
         else: # No media text message
             await send_to_webhook(msg,event.chat.title)
@@ -84,7 +87,7 @@ async def picimgur(filem,message,username): # Send media to webhook with imgur l
     async with aiohttp.ClientSession() as session:
       try:
         webhook = nextcord.Webhook.from_url(url, session=session)
-        print('Sending w media')
+        print('Sending w media Imgur')
         try:
           image = await imgur(filem) # Upload to imgur
           #print(image)
@@ -120,7 +123,7 @@ async def pic(filem,message,username): # Send media to webhook
             await webhook.send(content=line,username=username) 
       except Exception as e:
         print(f'Error {e.args}')
-        
+
 async def send_to_webhook(message,username): # Send message to webhook
     async with aiohttp.ClientSession() as session:
         print('Sending w/o media')
