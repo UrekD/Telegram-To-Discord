@@ -17,6 +17,13 @@ appid = os.environ.get("APPID")
 apihash = os.environ.get("APIHASH")
 apiname = os.environ.get("APINAME")
 dlloc = os.environ.get("DLLOC")
+input_channels_entities = os.environ.get("INPUT_CHANNELS")
+blacklist = os.environ.get("BLACKLIST")
+
+if blacklist == 'True':
+    blacklist = True
+if input_channels_entities is not None:
+  input_channels_entities = list(map(int, input_channels_entities.split(',')))
 
 async def imgur(mediafile): # Uploads media to imgur
     url = "https://api.imgur.com/3/upload"
@@ -38,14 +45,11 @@ def start():
                             appid, 
                             apihash)
     client.start()
-    #input_channels_entities = [-1336211109]
-    #output_channel_entities = []
     print('Started')
-    
-    @client.on(events.NewMessage())
+    print(f'Input channels: {input_channels_entities}')
+    print(f'Blacklist: {blacklist}')
+    @client.on(events.NewMessage(chats=input_channels_entities, blacklist_chats=blacklist))
     async def handler(event):
-        #print(event.chat)
-        #print(event.message)
         msg = event.message.message
         # Try to detect the language and translate the message if it's not english
         try: 
