@@ -56,37 +56,58 @@ def start():
           if msg != '':
               if detect(textwrap.wrap(msg, 2000)[0]) != 'en':
                   msg += '\n\n'+'Translated:\n\n' + GoogleTranslator(source='auto', target='en').translate(msg)
-         # print(mm)
         except:
           pass
         if event.message.media is not None: # If message has media
             dur = event.message.file.duration # Get duration
             if dur is None: # If duration is none
               dur=1 # Set duration to 1
-            # If duration is greater than 60 seconds or file size is greater than 8MB
-            if dur>60 or event.message.file.size > 8388609:  
+            # If duration is greater than 60 seconds or file size is greater than 200MB Imgur Limit
+            if dur>60 or event.message.file.size > 209715201 :  
               print('Media too long or too big!')
               msg +=f"\n\nLink to Video: https://t.me/c/{event.chat.id}/{event.message.id}" 
               await send_to_webhook(msg,event.chat.title)
               return
             else: # Duration less than 60s send media
               path = await event.message.download_media(dlloc)
-              await pic(path,msg,event.chat.title)
+              if event.message.file.size > 209715201:
+                await pic(path,msg,event.chat.title)
+              else:
+                await picimgur(path,msg,event.chat.title)
               os.remove(path)
         else: # No media text message
             await send_to_webhook(msg,event.chat.title)
         
     client.run_until_disconnected()
 
+async def picimgur(filem,message,username): # Send media to webhook with imgur link
+    async with aiohttp.ClientSession() as session:
+      try:
+        webhook = nextcord.Webhook.from_url(url, session=session)
+        print('Sending w media')
+        try:
+          image = await imgur(filem) # Upload to imgur
+          #print(image)
+          image = image['data']['link']
+          print(f'Imgur: {image}') 
+          await webhook.send(content=image,username=username) # Send imgur link to discord
+        except Exception as ee:
+          print(f'Error {ee.args}') 
+        for line in textwrap.wrap(message, 2000, replace_whitespace=False): # Send message to discord
+            await webhook.send(content=line,username=username) 
+      except Exception as e:
+        print(f'Error {e.args}')
+
 async def pic(filem,message,username): # Send media to webhook
     async with aiohttp.ClientSession() as session:
+      try:
         print('Sending w media')
         webhook = nextcord.Webhook.from_url(url, session=session)
         try: # Try sending to discord
           f = nextcord.File(filem)
           await webhook.send(file=f,username=username)
         except: # If it fails upload to imgur
-          print('File too big..')
+          print('Uploading to imgur')
           try:
             image = await imgur(filem) # Upload to imgur
             #print(image)
@@ -97,7 +118,9 @@ async def pic(filem,message,username): # Send media to webhook
             print(f'Error {ee.args}') 
         for line in textwrap.wrap(message, 2000, replace_whitespace=False): # Send message to discord
             await webhook.send(content=line,username=username) 
-
+      except Exception as e:
+        print(f'Error {e.args}')
+        
 async def send_to_webhook(message,username): # Send message to webhook
     async with aiohttp.ClientSession() as session:
         print('Sending w/o media')
