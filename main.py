@@ -55,15 +55,13 @@ def start():
          # print(mm)
         except:
           pass
-        # Check if the message is has a media file
-        if event.message.media is not None:
-            dur = 0
-            # Set duration to 1 if media has no duration ex. photo
-            if event.message.file.duration is None:
-              dur=1
-            # Duration less than 60s
-            if dur>60: # Duration greater than 60s send link to media
-              print('Media too long!')
+        if event.message.media is not None: # If message has media
+            dur = event.message.file.duration # Get duration
+            if dur is None: # If duration is none
+              dur=1 # Set duration to 1
+            # If duration is greater than 60 seconds or file size is greater than 8MB
+            if dur>60 or event.message.file.size > 8388609:  
+              print('Media too long or too big!')
               msg +=f"\n\nLink to Video: https://t.me/c/{event.chat.id}/{event.message.id}" 
               await send_to_webhook(msg,event.chat.title)
               return
