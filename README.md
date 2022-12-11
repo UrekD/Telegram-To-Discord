@@ -3,7 +3,7 @@ Mirrors all messages from Telegram and translates them if they are not English a
 
 # Requirements
 
-- Python 3.10 or later
+- Python 3.11 or later
 - Python pip -> requirements.txt
 - Discord bot token
 - Telegram API tokens
