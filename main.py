@@ -61,7 +61,7 @@ def start():
                   msg += '\n\n'+'Translated:\n\n' + GoogleTranslator(source='auto', target='en').translate(msg)
         except:
           pass
-        if event.message.media is not None: # If message has media
+        if event.message.media is not None and event.message.file: # If message has media
             dur = event.message.file.duration # Get duration
             if dur is None: # If duration is none
               dur=1 # Set duration to 1
