@@ -20,6 +20,7 @@ apiname = os.environ.get("APINAME")
 dlloc = os.environ.get("DLLOC")
 input_channels_entities = os.environ.get("INPUT_CHANNELS")
 blacklist = os.environ.get("BLACKLIST")
+translate = int(os.environ.get("TRANSLATE"))
 
 if blacklist == 'True':
     blacklist = True
