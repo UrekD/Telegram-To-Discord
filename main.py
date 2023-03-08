@@ -20,6 +20,7 @@ apiname = os.environ.get("APINAME")
 dlloc = os.environ.get("DLLOC")
 input_channels_entities = os.environ.get("INPUT_CHANNELS")
 blacklist = os.environ.get("BLACKLIST")
+translate = int(os.environ.get("TRANSLATE"))
 
 if blacklist == 'True':
     blacklist = True
@@ -55,12 +56,13 @@ def start():
           return #Ignore Messages from Users or Bots
         msg = event.message.message
         # Try to detect the language and translate the message if it's not english
-        try: 
-          if msg != '':
-              if detect(textwrap.wrap(msg, 2000)[0]) != 'en':
-                  msg += '\n\n'+'Translated:\n\n' + GoogleTranslator(source='auto', target='en').translate(msg)
-        except:
-          pass
+        if translate:
+          try: 
+            if msg != '':
+                if detect(textwrap.wrap(msg, 2000)[0]) != 'en':
+                    msg += '\n\n'+'Translated:\n\n' + GoogleTranslator(source='auto', target='en').translate(msg)
+          except:
+            pass
         if event.message.media is not None and event.message.file: # If message has media
             dur = event.message.file.duration # Get duration
             if dur is None: # If duration is none
