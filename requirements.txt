@@ -1,4 +1,4 @@
-aiohttp==3.8.5
+aiohttp==3.8.6
 deep_translator==1.8.3
 langdetect==1.0.9
 nextcord==2.1.0
