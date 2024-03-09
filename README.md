@@ -1,3 +1,9 @@
+# <span style="font-size:larger; color:red;">**Note: This project is archived.**</span>
+
+Due to lack of time and myself no longer using it, I'm no longer able to maintain this project. As such, it is now in a read-only state, and no further updates or maintenance will be provided.
+
+If you find this project useful and would like to fork it or take over maintenance, feel free to do so. Thank you to everyone who contributed or used this project over the years.
+
 # Telegram-To-Discord
 Mirrors all messages from Telegram and translates them if they are not English and sends them to the webhook with all the media. Only works for photos and videos not longer than 60 seconds (imgur limit) in which case it displays a link to the message in Telegram.
 
